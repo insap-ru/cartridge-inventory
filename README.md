@@ -33,7 +33,9 @@ docker build -t cartridge-inventory .
 логин: admin, пароль: admin
 
 docker run -d --name cartridge_app -p 5000:5000 \
+
   -v ~/cartridge_inventory_instance:/app/instance \
+  
   cartridge-inventory
 
   
