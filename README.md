@@ -58,6 +58,7 @@ docker logs -f cartridge_app
 Чтобы попасть внутрь контейнера:
 
 docker exec -it cartridge_app bash
+
 ls /app/instance
 
 -------------------------------------------------------------
