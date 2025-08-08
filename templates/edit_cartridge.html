@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Редактировать картридж</h2>
+<form method="post">
+    <div class="mb-3">
+        <label for="model_id" class="form-label">Модель</label>
+        <select name="model_id" id="model_id" class="form-select" required>
+            {% for m in models %}
+                <option value="{{ m.id }}" {% if cartridge.model_id == m.id %}selected{% endif %}>{{ m.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="serial_number" class="form-label">Серийный номер</label>
+        <input type="text" id="serial_number" name="serial_number" class="form-control" value="{{ cartridge.serial_number }}" required />
+    </div>
+    <div class="mb-3">
+    <label for="status" class="form-label">Статус</label>
+    <select name="status" id="status" class="form-select" required>
+        <option value="В наличии" {% if cartridge.status == 'В наличии' %}selected{% endif %}>Новые</option>
+        <option value="Используется" {% if cartridge.status == 'Используется' %}selected{% endif %}>Используется</option>
+        <option value="Списан" {% if cartridge.status == 'Списан' %}selected{% endif %}>Списан</option>
+    </select>
+</div>
+    <div class="mb-3">
+        <label for="department_id" class="form-label">Отдел</label>
+        <select name="department_id" id="department_id" class="form-select" required>
+            {% for d in departments %}
+                <option value="{{ d.id }}" {% if cartridge.department_id == d.id %}selected{% endif %}>{{ d.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{{ url_for('cartridges') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

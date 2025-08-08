@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Учёт картриджей</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    
+    <style>
+    
+    .navbar-brand {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.8rem;       /* больше, чем обычно */
+    font-weight: 900;        /* очень жирный */
+    color: #ffffff !important; /* насыщенный темно-синий */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1.5px;
+    padding-left: 15px;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #d9d9d9 !important; /* чуть светлее при наведении */
+    text-decoration: none;
+}
+    
+    nav.navbar {
+    min-height: 80px; /* увеличиваем высоту навигации */
+}
+
+nav.navbar .navbar-nav .nav-link {
+    line-height: 70px; /* выравниваем текст по центру по вертикали */
+}
+            .nav-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 5px;
+    background-color: #0d3b66; /* синий фон */
+    color: white !important;   /* белый текст */
+    border: 1px solid #0056b3; /* темная обводка */
+    box-shadow: 0 4px 0 #0056b3; /* "3D" эффект тени снизу */
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    background-color: #0056b3;
+    box-shadow: 0 2px 0 #003d80;
+    color: white !important;
+    text-decoration: none;
+}
+
+.nav-link:active {
+    background-color: #004085;
+    border-color: #002752;
+    box-shadow: 0 4px 0 #002752;
+    color: white !important;
+    transform: translateY(4px); /* эффект нажатия */
+}
+
+.nav-link.active {
+    background-color: #004085; /* темно-синий */
+    border-color: #002752;
+    box-shadow: 0 6px 0 #002752;
+    color: white !important;
+    font-weight: bold;
+    transform: none; /* без смещения, так как это не нажатие */
+}
+
+
+.nav-link:last-child {
+    margin-right: 0;
+}
+
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Учёт картриджей</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            {% if session.get('user_id') %}
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'new_cartridges' %}active{% endif %}" href="{{ url_for('new_cartridges') }}">Новые</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'cartridges' %}active{% endif %}" href="{{ url_for('cartridges') }}">Картриджи</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'written_off_cartridges' %}active{% endif %}" href="{{ url_for('written_off_cartridges') }}">Списанные</a></li>
+
+                {% if session.get('is_admin') %}
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'models' %}active{% endif %}" href="{{ url_for('models') }}">Модели</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'printers' %}active{% endif %}" href="{{ url_for('printers') }}">Принтеры</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'departments' %}active{% endif %}" href="{{ url_for('departments') }}">Отделы</a></li>
+                {% endif %}
+
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'stats' %}active{% endif %}" href="{{ url_for('stats') }}">Статистика</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.endpoint == 'logs' %}active{% endif %}" href="{{ url_for('logs') }}">Логи</a></li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+    <a class="btn btn-success me-2" href="{{ url_for('export_page') }}">Excel</a>
+
+    {% if session.get('user_id') %}
+        
+        <div class="dropdown me-3">
+  <a class="btn btn-light dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ session.get('username') }}
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+    <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Сменить пароль</a></li>
+    {% if session.get('is_admin') %}
+      <li><a class="dropdown-item" href="{{ url_for('add_user') }}">Добавить пользователя</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('manage_users') }}">Пользователи</a></li>
+    {% endif %}
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Выход</a></li>
+  </ul>
+  {% endif %}
+</div>
+
+
+            {% else %}
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Вход</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+
+
+</html>

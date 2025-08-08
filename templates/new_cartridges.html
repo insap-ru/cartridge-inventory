@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Новые картриджи (не назначенные в отдел)</h2>
+
+    <a href="{{ url_for('add_cartridge') }}" class="btn btn-primary mb-3">Добавить картридж</a>
+    
+    <form method="get" class="d-flex align-items-center gap-2 mb-3">
+    <select name="model" class="form-select form-select-sm w-auto">
+        <option value="">Все модели</option>
+        {% for m in models %}
+            <option value="{{ m.id }}" {% if selected_model == m.id|string %}selected{% endif %}>{{ m.name }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="text" name="serial" class="form-control form-control-sm w-auto" placeholder="Инвентарный номер" value="{{ request.args.get('serial', '') }}">
+
+    <button type="submit" class="btn btn-sm btn-primary">Фильтр</button>
+</form>
+
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Модель</th>
+                <th>Инвентарный номер</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for c in cartridges %}
+    <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.model.name }}</td>
+        <td>{{ c.serial_number }}</td>
+        <td>
+            <div class="d-flex flex-wrap align-items-center gap-1">
+                <form action="{{ url_for('assign_cartridge', cartridge_id=c.id) }}" method="post" class="d-flex flex-wrap align-items-center gap-1">
+                    <select name="department_id" class="form-select form-select-sm department-select" data-cartridge-id="{{ c.id }}" required style="width: 160px;">
+    <option value="">Отдел</option>
+    {% for dept in departments %}
+        <option value="{{ dept.id }}">{{ dept.name }}</option>
+    {% endfor %}
+</select>
+
+<select name="printer_id" class="form-select form-select-sm printer-select" id="printer-select-{{ c.id }}" style="width: 180px;">
+    <option value="">Принтер</option>
+</select>
+
+
+                    <button type="submit" class="btn btn-sm btn-primary">Назначить</button>
+                </form>
+
+                <form action="{{ url_for('delete_cartridge', id=c.id) }}" method="post" onsubmit="return confirm('Удалить этот картридж?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+    </table>
+    <script>
+document.querySelectorAll('.department-select').forEach(function(departmentSelect) {
+    departmentSelect.addEventListener('change', function() {
+        var cartridgeId = this.dataset.cartridgeId;
+        var printerSelect = document.getElementById('printer-select-' + cartridgeId);
+        var deptId = this.value;
+
+        printerSelect.innerHTML = '<option value="">Загрузка...</option>';
+
+        if (deptId) {
+            fetch('/get_printers/' + deptId)
+                .then(response => response.json())
+                .then(data => {
+                    printerSelect.innerHTML = '<option value="">Выбрать принтер</option>';
+                    data.forEach(function(printer) {
+                        var option = document.createElement('option');
+                        option.value = printer.id;
+                        option.textContent = `${printer.name} (${printer.inventory_number})`;;
+                        printerSelect.appendChild(option);
+                    });
+                });
+        } else {
+            printerSelect.innerHTML = '<option value="">Выбрать принтер</option>';
+        }
+    });
+});
+</script>
+
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4 text-center">Добавить пользователя</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-6" style="max-width: 400px;">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Имя пользователя</label>
+                    <input type="text" name="username" id="username" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" name="password" id="password" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="is_admin" class="form-label">Роль</label>
+                    <select name="is_admin" id="is_admin" class="form-select">
+                        <option value="0">Пользователь</option>
+                        <option value="1">Администратор</option>
+                    </select>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

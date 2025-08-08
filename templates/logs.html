@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Логи</h2>
+<form method="get" class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+    <input type="text" name="keyword" class="form-control form-control-sm w-auto" placeholder="Ключевое слово" value="{{ request.args.get('keyword', '') }}">
+    
+    <input type="date" name="date_from" class="form-control form-control-sm w-auto" value="{{ request.args.get('date_from', '') }}">
+    <input type="date" name="date_to" class="form-control form-control-sm w-auto" value="{{ request.args.get('date_to', '') }}">
+
+    <button type="submit" class="btn btn-sm btn-primary">Фильтр</button>
+    
+    <a href="{{ url_for('logs') }}" class="btn btn-sm btn-secondary">Очистить</a>
+</form>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr><th>Время</th>
+        <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+            <tr>
+                <td>{{ log.timestamp }}</td>
+                <td>{{ log.action|safe }}</td>
+                </tr>
+        {% else %}
+            <tr><td colspan="2" class="text-center">Логи не найдены</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

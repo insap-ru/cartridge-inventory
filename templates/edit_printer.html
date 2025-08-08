@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Редактировать принтер</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Название принтера</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ printer.name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="department_id" class="form-label">Отдел</label>
+            <select class="form-control" id="department_id" name="department_id">
+                <option value="">—</option>
+                {% for department in departments %}
+                    <option value="{{ department.id }}" {% if printer.department_id == department.id %}selected{% endif %}>{{ department.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

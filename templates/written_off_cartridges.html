@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Списанные картриджи</h2>
+    <form method="get" class="mb-3 d-flex gap-2 flex-wrap align-items-center">
+
+    <select name="department" class="form-select form-select-sm w-auto">
+        <option value="">Все отделы</option>
+        {% for d in departments %}
+            <option value="{{ d.id }}" {% if request.args.get('department') == d.id|string %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="model" class="form-select form-select-sm w-auto">
+        <option value="">Все модели</option>
+        {% for m in models %}
+            <option value="{{ m.id }}" {% if request.args.get('model') == m.id|string %}selected{% endif %}>{{ m.name }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="text" name="serial" class="form-control form-control-sm w-auto" placeholder="Инвентарный номер" value="{{ request.args.get('serial', '') }}">
+
+    <button type="submit" class="btn btn-sm btn-primary">Фильтр</button>
+
+</form>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Модель</th>
+                <th>Инвентарный номер</th>
+                <th>Отдел</th>
+                <th>Принтер (Инв.№)</th>
+                <th>Дата списания</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in cartridges %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.model }}</td>
+                <td>{{ c.serial_number }}</td>
+                <td>{{ c.department }}</td>
+                <td>{{ c.printer }}</td>
+                <td>{{ c.written_off_datetime or '—' }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

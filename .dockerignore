@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+instance/
+*.db
+*.sqlite3
+migrations/
+.env
+.flaskenv
+cartridge-inventory.tar
+*.tar

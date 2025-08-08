@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Добавить картридж</h2>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} mt-2">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<form method="post">
+    <div class="mb-3">
+        <label for="model_id" class="form-label">Модель</label>
+        <select name="model_id" id="model_id" class="form-select" required>
+            {% for m in models %}
+                <option value="{{ m.id }}">{{ m.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="serial_number" class="form-label">Серийный номер</label>
+        <input type="text" id="serial_number" name="serial_number" class="form-control" required />
+    </div>
+   <div class="mb-3">
+    <label for="status" class="form-label">Статус</label>
+    <select name="status" id="status" class="form-select" required>
+        <option value="Новый" selected>Новый</option>
+            </select>
+</div>
+   
+    <button type="submit" class="btn btn-success">Добавить</button>
+    <a href="{{ url_for('cartridges') }}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

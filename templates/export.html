@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Выгрузка картриджей в Excel</h1>
+
+<form method="get" action="{{ url_for('export_page') }}">
+  <label>Отдел:</label>
+  <select name="department">
+    <option value="">Все</option>
+    {% for d in departments %}
+    <option value="{{ d.id }}" {% if request.args.get('department') == d.id|string %}selected{% endif %}>{{ d.name }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Модель:</label>
+  <select name="model">
+    <option value="">Все</option>
+    {% for m in models %}
+    <option value="{{ m.id }}" {% if request.args.get('model') == m.id|string %}selected{% endif %}>{{ m.name }}</option>
+    {% endfor %}
+  </select>
+
+  <label>Дата списания от:</label>
+  <input type="date" name="date_from" value="{{ request.args.get('date_from', '') }}">
+  <label>до:</label>
+  <input type="date" name="date_to" value="{{ request.args.get('date_to', '') }}">
+
+  <button type="submit" class="btn btn-primary">Показать</button>
+</form>
+
+{% if cartridges %}
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Модель</th>
+      <th>Инвентарный картриджа</th>
+      <th>Отдел</th>
+      <th>Принтер</th>
+      <th>Инвентарный принтера</th>
+      <th>Дата списания</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cartridge in cartridges %}
+    <tr>
+      <td>{{ cartridge.id }}</td>
+      <td>{{ cartridge.model.name }}</td>
+      <td>{{ cartridge.serial_number }}</td>
+      <td>{{ cartridge.department.name }}</td>
+      <td>{{ cartridge.printer.name }}</td>
+      <td>{{ cartridge.printer.inventory_number }}</td>
+      <td>{{ cartridge.written_off_datetime.strftime('%Y-%m-%d') if cartridge.written_off_datetime else '—' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{{ url_for('export_excel', department=request.args.get('department'), model=request.args.get('model'), date_from=request.args.get('date_from'), date_to=request.args.get('date_to')) }}" class="btn btn-success">
+  Выгрузить Excel
+</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Список принтеров</h2>
+    <a href="{{ url_for('add_printer') }}" class="btn btn-primary mb-3">Добавить принтер</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Инвентарный номер</th>
+                <th>Отдел</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for printer in printers %}
+    <tr>
+        <td>{{ printer.name }}</td>
+        <td>{{ printer.inventory_number or '—' }}</td>
+        <td>{{ printer.department.name if printer.department else '—' }}</td>
+        <td>
+            <a href="{{ url_for('edit_printer', printer_id=printer.id) }}" class="btn btn-sm btn-warning">Редактировать</a>
+            <a href="{{ url_for('delete_printer', printer_id=printer.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Удалить принтер?');">Удалить</a>
+        </td>
+    </tr>
+{% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

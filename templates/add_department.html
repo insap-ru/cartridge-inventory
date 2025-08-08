@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Добавить отдел</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="name" class="form-label">Название отдела</label>
+        <input type="text" class="form-control" name="name" id="name" required>
+    </div>
+    <button type="submit" class="btn btn-success">Добавить</button>
+</form>
+{% endblock %}
