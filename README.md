@@ -21,6 +21,9 @@
 
 git clone https://github.com/insap-ru/cartridge-inventory.git
 
+cd cartridge-inventory
+
+
 На сервере с Docker:
 docker build -t cartridge-inventory .
 
