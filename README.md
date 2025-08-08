@@ -66,6 +66,8 @@ docker exec -it cartridge_app bash
 
 ls /app/instance
 
+Либо в корне пользователя в папке: cartridge_inventory_instance
+
 -------------------------------------------------------------
 
 # Остановить и удалить контейнер
