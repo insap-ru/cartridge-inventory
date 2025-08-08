@@ -79,11 +79,11 @@ docker rm cartridge_app
 docker volume rm cartridge_data
 
 # Перезапустить контейнер заново
-docker run -d \
-  --name cartridge_app \
-  -p 5000:5000 \
-  -v cartridge_data:/app/instance \
-  cartridge-inventory
+docker run -d --name cartridge_app -p 5000:5000 \
+
+-v ~/cartridge_inventory_instance:/app/instance \
+
+cartridge-inventory
 
 --------------------------------------------------------------
 
