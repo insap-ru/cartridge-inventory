@@ -65,6 +65,7 @@ ls /app/instance
 
 # Остановить и удалить контейнер
 docker stop cartridge_app
+
 docker rm cartridge_app
 
 # Удалить volume с базой
